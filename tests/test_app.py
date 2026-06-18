@@ -187,5 +187,22 @@ class CarbonAppTestCase(unittest.TestCase):
         self.assertEqual(db_log.total_emissions, 7.0)
         self.assertEqual(db_log.source_text, "Commuted in EV today")
 
+    # Test 9 (Input Sanitization): Verify sanitize_input_text utility strips HTML tags and script payloads.
+    def test_input_sanitization(self) -> None:
+        from app import sanitize_input_text
+        dirty_input = "<script>alert('xss')</script>Hello <b>World</b> & test"
+        clean = sanitize_input_text(dirty_input)
+        # HTML tags should be stripped and remaining characters escaped
+        self.assertEqual(clean, "alert(&#x27;xss&#x27;)Hello World &amp; test")
+
+    # Test 10 (Security Headers): Verify outgoing HTTP responses contain strict security headers.
+    def test_security_headers_injection(self) -> None:
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Content-Security-Policy", response.headers)
+        self.assertEqual(response.headers["X-Frame-Options"], "DENY")
+        self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
+        self.assertEqual(response.headers["Referrer-Policy"], "strict-origin-when-cross-origin")
+
 if __name__ == '__main__':
     unittest.main()

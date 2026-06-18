@@ -1,12 +1,14 @@
 """Main Flask application configuration and routing endpoints.
 
 This module initializes the Flask server with database connections, seeds dummy
-users, configures system-wide logging, and sets up dashboard rendering and
-JSON REST APIs for carbon footprint tracking and analysis.
+users, configures system-wide logging, sets up dashboard rendering, and hosts
+secure API endpoints with input sanitization and strict HTTP security headers.
 """
 
+import html
 import logging
 import os
+import re
 from typing import Any, Dict, Generator, List, Tuple, Union
 
 from flask import Flask, Response, jsonify, render_template, request
@@ -30,6 +32,30 @@ app.config.from_object(Config)
 
 # Bind SQLAlchemy database instance with application configurations
 db.init_app(app)
+
+
+def sanitize_input_text(text: str) -> str:
+    """Sanitizes incoming message strings to prevent XSS and tag injections.
+
+    Strips out nested HTML structures, dynamic scripting elements, and escapes
+    remaining content characters to guarantee plain-text handling.
+
+    Args:
+        text (str): Raw untrusted string input.
+
+    Returns:
+        str: Cleaned and neutralized string.
+
+    Raises:
+        None
+    """
+    if not text:
+        return ""
+    # 1. Strip standard HTML/XML tags completely using regular expression
+    clean_text: str = re.sub(r'<[^>]*>', '', text)
+    # 2. Escape HTML dynamic scripts/character combinations
+    clean_text = html.escape(clean_text)
+    return clean_text.strip()
 
 
 def stream_carbon_logs(
@@ -85,6 +111,8 @@ with app.app_context():
     dummy_user: Union[User, None] = db.session.get(User, 1)
     if not dummy_user:
         dummy_user = User(id=1, username="eco_pioneer")
+        # Initialize default user with a secure password hash
+        dummy_user.set_password("pioneer_passcode_2026")
         db.session.add(dummy_user)
         try:
             db.session.commit()
@@ -95,6 +123,31 @@ with app.app_context():
                 f"Failed to seed dummy user during startup: {str(e)}",
                 exc_info=True,
             )
+
+
+@app.after_request
+def add_security_headers(response: Response) -> Response:
+    """Injects strict production security headers into every HTTP response.
+
+    Args:
+        response (Response): The outgoing Flask Response object.
+
+    Returns:
+        Response: The modified response object containing security headers.
+
+    Raises:
+        None
+    """
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' https://cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "img-src 'self' data:;"
+    )
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    return response
 
 
 @app.route('/')
@@ -233,7 +286,19 @@ def chat() -> Tuple[Response, int]:
             400,
         )
 
-    user_message: str = data["message"]
+    # Sanitize untrusted user message before further parsing/AI extract calls
+    user_message: str = sanitize_input_text(data["message"])
+    if not user_message:
+        return (
+            jsonify(
+                {
+                    "error": "Bad Request",
+                    "message": "Input was blocked by dynamic security filters.",
+                }
+            ),
+            400,
+        )
+
     api_key: Union[str, None] = app.config.get("GEMINI_API_KEY")
 
     try:
@@ -359,6 +424,10 @@ def log_metric() -> Tuple[Response, int]:
             ),
             400,
         )
+
+    # Sanitize category and unit inputs
+    category = sanitize_input_text(category)
+    unit = sanitize_input_text(unit)
 
     try:
         metric: Union[CarbonMetric, None] = (
