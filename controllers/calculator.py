@@ -32,9 +32,22 @@ def calculate_footprint(data_dict):
     }
     """
     # Extract properties with safety fallbacks
-    transport_km = float(data_dict.get("transport_km", 0.0))
+    try:
+        transport_km = float(data_dict.get("transport_km", 0.0))
+        if transport_km < 0:
+            transport_km = 0.0
+    except (ValueError, TypeError):
+        transport_km = 0.0
+
     transport_type = str(data_dict.get("transport_type", "")).strip().lower()
-    appliance_hours = float(data_dict.get("appliance_hours", 0.0))
+
+    try:
+        appliance_hours = float(data_dict.get("appliance_hours", 0.0))
+        if appliance_hours < 0:
+            appliance_hours = 0.0
+    except (ValueError, TypeError):
+        appliance_hours = 0.0
+
     diet_type = str(data_dict.get("diet_type", "")).strip().lower()
 
     # 1. Transport Emissions Calculation

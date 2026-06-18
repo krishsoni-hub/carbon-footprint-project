@@ -84,10 +84,10 @@ def chat_view():
 def chat():
     """POST endpoint handling natural language carbon logging activity parsing and scoring."""
     data = request.get_json()
-    if not data or 'message' not in data:
+    if not data or 'message' not in data or not str(data['message']).strip():
         return jsonify({
             "error": "Bad Request",
-            "message": "Missing 'message' key in JSON payload."
+            "message": "Missing or empty 'message' key in JSON payload."
         }), 400
     
     user_message = data['message']

@@ -13,3 +13,7 @@ instance/
 env/
 venv/
 ENV/
+
+# Code Coverage
+.coverage
+htmlcov/
