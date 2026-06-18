@@ -1,35 +1,32 @@
+from typing import Dict, Any
+
 # Global carbon conversion factors (kg CO2)
-PETROL_CAR_FACTOR = 0.192       # kg CO2 per km
-DIESEL_CAR_FACTOR = 0.171       # kg CO2 per km
-EV_CAR_FACTOR = 0.047           # kg CO2 per km
+PETROL_CAR_FACTOR: float = 0.192       # kg CO2 per km
+DIESEL_CAR_FACTOR: float = 0.171       # kg CO2 per km
+EV_CAR_FACTOR: float = 0.047           # kg CO2 per km
 
 # Grid electricity emission rates
-GRID_ELECTRICITY_KWH_FACTOR = 0.385  # kg CO2 per kWh
-APPLIANCE_ACTIVE_HOUR_FACTOR = 0.45  # kg CO2 per active hour (equivalent average appliance state)
+GRID_ELECTRICITY_KWH_FACTOR: float = 0.385  # kg CO2 per kWh
+APPLIANCE_ACTIVE_HOUR_FACTOR: float = 0.45  # kg CO2 per active hour (equivalent average appliance state)
 
 # Dietary daily contributions
-HIGH_MEAT_DIET_DAILY_FACTOR = 3.3    # kg CO2 per day
-VEGETARIAN_DIET_DAILY_FACTOR = 1.7   # kg CO2 per day
+HIGH_MEAT_DIET_DAILY_FACTOR: float = 3.3    # kg CO2 per day
+VEGETARIAN_DIET_DAILY_FACTOR: float = 1.7   # kg CO2 per day
 
-def calculate_footprint(data_dict):
+def calculate_footprint(data_dict: Dict[str, Any]) -> Dict[str, float]:
     """
     Calculate the carbon footprint based on transportation, energy usage, and diet inputs.
 
-    Input schema:
-    {
-        "transport_km": float,
-        "transport_type": str,      # options: 'petrol', 'diesel', 'ev' / 'electric'
-        "appliance_hours": float,
-        "diet_type": str            # options: 'high_meat', 'vegetarian'
-    }
-
-    Returns a breakdown dictionary with total sum included:
-    {
-        "transport_emissions": float,
-        "energy_emissions": float,
-        "diet_emissions": float,
-        "total_emissions": float
-    }
+    :param data_dict: A dictionary mapping activity categories to carbon emission parameters.
+        Must contain:
+        - "transport_km" (float or str)
+        - "transport_type" (str)
+        - "appliance_hours" (float or str)
+        - "diet_type" (str)
+    :type data_dict: Dict[str, Any]
+    :return: A dictionary of computed emissions breakdown including "transport_emissions",
+        "energy_emissions", "diet_emissions", and "total_emissions".
+    :rtype: Dict[str, float]
     """
     # Extract properties with safety fallbacks
     try:

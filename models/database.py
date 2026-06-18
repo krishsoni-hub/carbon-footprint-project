@@ -38,8 +38,8 @@ class CarbonLog(db.Model):
     __tablename__ = 'carbon_logs'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), index=True, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True, nullable=False)
     transport_emissions = db.Column(db.Float, nullable=False)
     energy_emissions = db.Column(db.Float, nullable=False)
     diet_emissions = db.Column(db.Float, nullable=False)
