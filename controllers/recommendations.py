@@ -1,26 +1,40 @@
-def get_contextual_advice(emissions_breakdown: dict):
-    """
-    Generates dynamic contextual recommendations based on calculated carbon emissions.
+"""Contextual carbon footprint recommendation engine module.
+
+Provides logic to parse daily carbon emissions and compile tailored,
+actionable tips to help users transition to sustainable lifestyles.
+"""
+
+from typing import Dict, Any, List, Union
+
+
+def get_contextual_advice(
+    emissions_breakdown: Dict[str, float]
+) -> Dict[str, Union[str, List[str]]]:
+    """Generates dynamic contextual recommendations based on calculated carbon emissions.
 
     Args:
-        emissions_breakdown (dict): emissions calculation results containing keys:
-            - transport_emissions (float)
-            - energy_emissions (float)
-            - diet_emissions (float)
-            - total_emissions (float)
+        emissions_breakdown (Dict[str, float]): A dictionary containing emissions calculation breakdown.
+            Must include keys:
+            - "transport_emissions" (float): Calculated transport emissions.
+            - "energy_emissions" (float): Calculated appliance energy emissions.
+            - "diet_emissions" (float): Calculated daily dietary emissions.
+            - "total_emissions" (float): Calculated total cumulative emissions.
 
     Returns:
-        dict: containing:
-            - status_alert (str): summary statement of current carbon performance.
-            - tips_list (list of str): list of actionable recommendation points.
-    """
-    transport = float(emissions_breakdown.get("transport_emissions", 0.0))
-    energy = float(emissions_breakdown.get("energy_emissions", 0.0))
-    diet = float(emissions_breakdown.get("diet_emissions", 0.0))
-    total = float(emissions_breakdown.get("total_emissions", 0.0))
+        Dict[str, Union[str, List[str]]]: A dictionary containing recommendation results:
+            - "status_alert" (str): Summary statement of current carbon performance.
+            - "tips_list" (List[str]): Actionable recommendation bullet points.
 
-    tips_list = []
-    
+    Raises:
+        None: Safely falls back if input fields are missing or unexpected.
+    """
+    transport: float = float(emissions_breakdown.get("transport_emissions", 0.0))
+    energy: float = float(emissions_breakdown.get("energy_emissions", 0.0))
+    diet: float = float(emissions_breakdown.get("diet_emissions", 0.0))
+    total: float = float(emissions_breakdown.get("total_emissions", 0.0))
+
+    tips_list: List[str] = []
+
     # 1. Transportation footprint threshold validation (> 15 kg CO2)
     if transport > 15.0:
         tips_list.append(
@@ -43,6 +57,7 @@ def get_contextual_advice(emissions_breakdown: dict):
         )
 
     # Formulate contextual header alert text
+    status_alert: str
     if len(tips_list) > 0:
         status_alert = (
             f"Your daily carbon footprint is elevated at {total:.2f} kg CO2. "
