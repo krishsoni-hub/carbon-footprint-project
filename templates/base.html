@@ -13,26 +13,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <!-- Tailwind Configuration and Theme Customizations -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cyberdark: '#090D16',
-                        crispslate: '#F3F4F6',
-                        emerald: '#10B981',
-                        softsage: '#34D399',
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    }
-                }
-            }
+    <style type="tailwindcss">
+        @theme {
+            --color-cyberdark: #090D16;
+            --color-crispslate: #F3F4F6;
+            --color-emerald: #10B981;
+            --color-softsage: #34D399;
+            --font-sans: "Plus Jakarta Sans", sans-serif;
         }
-    </script>
+    </style>
     
     <style>
         /* Custom scrollbar matching the Cyber-Eco theme */
