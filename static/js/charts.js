@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fill: true,
                 tension: 0.4, // High tension produces smooth curves
                 pointBackgroundColor: '#34D399',
-                pointBorderColor: '#090D16',
+                pointBorderColor: '#0d0d0d',
                 pointBorderWidth: 2.5,
                 pointRadius: 4,
                 pointHoverRadius: 6,
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     display: false // Suppress legends to keep layout clean
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(9, 13, 22, 0.95)',
+                    backgroundColor: 'rgba(13, 13, 13, 0.95)',
                     titleColor: '#F3F4F6',
                     titleFont: {
                         family: 'Plus Jakarta Sans',

@@ -12,7 +12,7 @@
         background: transparent;
     }
     #chatViewport::-webkit-scrollbar-thumb {
-        background: rgba(16, 185, 129, 0.1);
+        background: rgba(16, 185, 129, 0.12);
         border-radius: 3px;
     }
     #chatViewport::-webkit-scrollbar-thumb:hover {
@@ -22,18 +22,18 @@
 {% endblock %}
 
 {% block content %}
-<section class="max-w-4xl mx-auto h-[calc(100vh-12rem)] flex flex-col justify-between bg-[#0F1626]/60 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl overflow-hidden relative" aria-label="Interactive AI Assistant Chat Area">
+<section class="max-w-4xl mx-auto h-[calc(100vh-12rem)] flex flex-col justify-between bg-neutral-900/90 backdrop-blur-lg border border-neutral-800 rounded-2xl shadow-xl overflow-hidden relative" aria-label="Interactive AI Assistant Chat Area">
     
     <!-- Chat Screen Header -->
-    <header class="px-6 py-4 bg-[#090D16]/40 border-b border-white/10 flex items-center justify-between">
+    <header class="px-6 py-4 bg-neutral-950/40 border-b border-neutral-800 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-            <div class="w-2.5 h-2.5 rounded-full bg-emerald animate-ping" aria-hidden="true"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" aria-hidden="true"></div>
             <div>
-                <h3 class="text-white font-bold text-sm tracking-wide">EcoPulse AI Assistant</h3>
-                <p class="text-slate-400 text-[10px] uppercase font-bold tracking-widest mt-0.5">Gemini 2.5 Flash Model Integration</p>
+                <h3 class="text-neutral-100 font-bold text-sm tracking-wide">EcoPulse AI Assistant</h3>
+                <p class="text-neutral-400 text-[10px] uppercase font-bold tracking-widest mt-0.5">Gemini 2.5 Flash Model Integration</p>
             </div>
         </div>
-        <div class="text-xs text-emerald-400 font-semibold bg-emerald/10 border border-emerald/20 px-2.5 py-1 rounded-full" aria-live="polite">
+        <div class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full" aria-live="polite">
             Ready to Analyze
         </div>
     </header>
@@ -42,16 +42,16 @@
     <div id="chatViewport" class="flex-grow overflow-y-auto p-6 space-y-6" role="log" aria-label="Message Stream viewport" aria-live="polite">
         <!-- Initial Greetings Message -->
         <article class="flex items-start justify-start space-x-3 max-w-[80%]" aria-label="System introductory greeting message">
-            <div class="w-8 h-8 rounded-lg bg-emerald/10 border border-emerald/25 flex items-center justify-center text-emerald flex-shrink-0" role="img" aria-label="Assistant icon">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 flex-shrink-0" role="img" aria-label="Assistant icon">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
             </div>
-            <div class="bg-white/5 border border-white/10 text-slate-100 p-4 rounded-2xl rounded-tl-none shadow-md">
+            <div class="bg-neutral-950 border border-neutral-800 text-neutral-100 p-4 rounded-2xl rounded-tl-none shadow-md">
                 <p class="text-sm leading-relaxed">
                     Hello! I'm your EcoPulse Carbon Assistant. Describe your daily activities below, and I will extract the carbon metrics and calculate your daily carbon emissions.
                 </p>
-                <p class="text-xs text-slate-400 mt-2">
+                <p class="text-xs text-neutral-400 mt-2">
                     Example: "I drove 25 kilometers in my diesel car, ran my air conditioner for 5 hours, and had vegetarian meals today."
                 </p>
             </div>
@@ -59,8 +59,8 @@
     </div>
 
     <!-- Hidden Pulsing Loading Spinner with status role -->
-    <div id="loadingSpinner" class="hidden px-6 py-3 bg-[#090D16]/20 flex items-center justify-start space-x-3 text-xs text-emerald-400 animate-pulse" role="status" aria-live="polite">
-        <svg class="animate-spin h-4 w-4 text-emerald" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+    <div id="loadingSpinner" class="hidden px-6 py-3 bg-neutral-950/20 flex items-center justify-start space-x-3 text-xs text-emerald-400 animate-pulse" role="status" aria-live="polite">
+        <svg class="animate-spin h-4 w-4 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
@@ -68,15 +68,15 @@
     </div>
 
     <!-- Chat Control Bar -->
-    <form id="chatForm" class="p-4 bg-[#090D16]/50 border-t border-white/10 flex flex-col space-y-2">
-        <label for="userInput" class="text-xs text-slate-300 font-bold uppercase tracking-wider pl-1">Describe your daily activity:</label>
+    <form id="chatForm" class="p-4 bg-neutral-950/50 border-t border-neutral-800 flex flex-col space-y-2">
+        <label for="userInput" class="text-xs text-neutral-300 font-bold uppercase tracking-wider pl-1">Describe your daily activity:</label>
         <div class="flex items-center space-x-3 w-full">
             <input id="userInput" type="text" autocomplete="off" required
                    placeholder="e.g., 'drove 15km in petrol car, 3 appliance hours, veggie diet'" 
-                   class="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald-500 transition-all duration-300">
+                   class="flex-grow bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all duration-300">
             
             <button id="sendBtn" type="submit" aria-label="Submit activity description to AI assistant for analysis"
-                    class="bg-gradient-to-r from-emerald to-softsage text-cyberdark text-xs font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-xl hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald focus:ring-offset-2 focus:ring-offset-[#090D16] transition-all duration-200 flex items-center space-x-2">
+                    class="bg-gradient-to-r from-emerald-500 to-teal-400 text-neutral-950 text-xs font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-xl hover:shadow-[0_0_15px_rgba(52,211,153,0.2)] hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-neutral-950 transition-all duration-200 flex items-center space-x-2">
                 <span>Analyze Activity</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -102,7 +102,7 @@
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
-                .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/\n/g, '<br>')
                 .replace(/- (.*?)(<br>|$)/g, '<li class="ml-4 list-disc">$1</li>');
@@ -118,7 +118,7 @@
             let avatarHtml = '';
             if (senderType === 'assistant') {
                 avatarHtml = `
-                    <div class="w-8 h-8 rounded-lg bg-emerald/10 border border-emerald/25 flex items-center justify-center text-emerald flex-shrink-0" role="img" aria-label="Assistant avatar">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 flex-shrink-0" role="img" aria-label="Assistant avatar">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                         </svg>
@@ -127,8 +127,8 @@
             }
 
             const bubbleClass = senderType === 'user' 
-                ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl rounded-tr-none shadow-md max-w-[80%] p-4 focus:ring-2 focus:ring-emerald-300 focus:outline-none' 
-                : 'bg-white/5 border border-white/10 text-slate-100 rounded-2xl rounded-tl-none shadow-md max-w-[80%] p-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none';
+                ? 'bg-neutral-800 border border-neutral-700 text-neutral-100 rounded-2xl rounded-tr-none shadow-md max-w-[80%] p-4 focus:ring-2 focus:ring-emerald-500/50 focus:outline-none' 
+                : 'bg-neutral-950 border border-neutral-800 text-neutral-100 rounded-2xl rounded-tl-none shadow-md max-w-[80%] p-4 focus:ring-2 focus:ring-emerald-500/50 focus:outline-none';
 
             const parsedText = formatMarkdownText(messageContent);
             
