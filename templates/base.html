@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EcoPulse | Carbon Footprint Awareness{% endblock %}</title>
+    
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Plus Jakarta Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration and Theme Customizations -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyberdark: '#090D16',
+                        crispslate: '#F3F4F6',
+                        emerald: '#10B981',
+                        softsage: '#34D399',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom scrollbar matching the Cyber-Eco theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090D16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 4px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.35);
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-cyberdark text-crispslate font-sans min-h-screen flex flex-col relative overflow-x-hidden selection:bg-emerald/30 selection:text-softsage">
+    <!-- Cyber-Eco ambient glow decoration blobs -->
+    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-softsage/5 rounded-full blur-[150px] pointer-events-none z-0"></div>
+
+    <!-- Sticky premium navigation header -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-[#090D16]/70 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo / Identity -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-emerald to-softsage flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                        <svg class="w-5 h-5 text-cyberdark" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-crispslate to-softsage bg-clip-text text-transparent">
+                        ECO<span class="text-emerald">PULSE</span>
+                    </span>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/" class="text-sm font-semibold tracking-wide transition-all duration-300 relative py-2 group text-crispslate hover:text-softsage">
+                        Dashboard
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="/chat" class="text-sm font-semibold tracking-wide transition-all duration-300 relative py-2 group text-crispslate hover:text-softsage">
+                        AI Assistant
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </nav>
+
+                <!-- Mobile Navigation Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" type="button" class="text-crispslate hover:text-softsage focus:outline-none" aria-label="Toggle Navigation Menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-white/10 bg-[#090D16]/95 backdrop-blur-lg">
+            <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-crispslate hover:bg-white/5 hover:text-softsage transition duration-200">
+                    Dashboard
+                </a>
+                <a href="/chat" class="block px-3 py-2 rounded-md text-base font-medium text-crispslate hover:bg-white/5 hover:text-softsage transition duration-200">
+                    AI Assistant
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Central Body Wrapper Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 z-10">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Glassy Cyber-Eco Footer -->
+    <footer class="border-t border-white/10 bg-[#090D16]/50 backdrop-blur-md py-6 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div class="text-sm text-crispslate/40">
+                &copy; 2026 EcoPulse Initiative. Powered by Gemini.
+            </div>
+            <div class="flex space-x-6 text-sm text-crispslate/60">
+                <a href="#" class="hover:text-emerald transition duration-200">System Status</a>
+                <a href="#" class="hover:text-emerald transition duration-200">Privacy Policy</a>
+                <a href="#" class="hover:text-emerald transition duration-200">API Documentation</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Navigation Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Automatically highlight active path matching navigation
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('nav a, #mobile-menu a');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('text-softsage');
+                    // Enable full underlines for active navigation links
+                    const underline = link.querySelector('span');
+                    if (underline) {
+                        underline.classList.remove('w-0');
+                        underline.classList.add('w-full');
+                    }
+                }
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

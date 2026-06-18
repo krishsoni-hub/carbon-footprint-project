@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}AI Carbon Assistant | EcoPulse{% endblock %}
+
+{% block head %}
+<style>
+    /* Styling scrollbar specifically for the chat viewport */
+    #chatViewport::-webkit-scrollbar {
+        width: 6px;
+    }
+    #chatViewport::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    #chatViewport::-webkit-scrollbar-thumb {
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 3px;
+    }
+    #chatViewport::-webkit-scrollbar-thumb:hover {
+        background: rgba(16, 185, 129, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto h-[calc(100vh-12rem)] flex flex-col justify-between bg-[#0F1626]/60 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl overflow-hidden relative">
+    
+    <!-- Chat Screen Header -->
+    <div class="px-6 py-4 bg-[#090D16]/40 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald animate-ping"></div>
+            <div>
+                <h3 class="text-white font-bold text-sm tracking-wide">EcoPulse AI Assistant</h3>
+                <p class="text-crispslate/40 text-[10px] uppercase font-bold tracking-widest mt-0.5">Gemini 2.5 Flash Model Integration</p>
+            </div>
+        </div>
+        <div class="text-xs text-softsage font-medium bg-emerald/10 border border-emerald/20 px-2.5 py-1 rounded-full">
+            Ready to Analyze
+        </div>
+    </div>
+
+    <!-- Scrollable Message Viewport -->
+    <div id="chatViewport" class="flex-grow overflow-y-auto p-6 space-y-6">
+        <!-- Initial Greetings Message -->
+        <div class="flex items-start justify-start space-x-3 max-w-[80%]">
+            <div class="w-8 h-8 rounded-lg bg-emerald/10 border border-emerald/25 flex items-center justify-center text-emerald flex-shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+            </div>
+            <div class="bg-white/5 border border-white/10 text-gray-100 p-4 rounded-2xl rounded-tl-none shadow-md">
+                <p class="text-sm leading-relaxed">
+                    Hello! I'm your EcoPulse Carbon Assistant. Describe your daily activities below, and I will extract the carbon metrics and calculate your daily carbon emissions.
+                </p>
+                <p class="text-xs text-crispslate/40 mt-2">
+                    Example: "I drove 25 kilometers in my diesel car, ran my air conditioner for 5 hours, and had vegetarian meals today."
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Pulsing Loading Spinner -->
+    <div id="loadingSpinner" class="hidden px-6 py-3 bg-[#090D16]/20 flex items-center justify-start space-x-3 text-xs text-softsage animate-pulse">
+        <svg class="animate-spin h-4 w-4 text-emerald" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>AI is analyzing carbon footprint values...</span>
+    </div>
+
+    <!-- Chat Control Bar -->
+    <form id="chatForm" class="p-4 bg-[#090D16]/50 border-t border-white/10 flex items-center space-x-3">
+        <input id="userInput" type="text" autocomplete="off" required
+               placeholder="Describe your activities (e.g., 'drove 15km in petrol car, 3 appliance hours, veggie diet')" 
+               class="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-crispslate placeholder-crispslate/30 focus:outline-none focus:border-emerald/50 focus:ring-1 focus:ring-emerald/50 transition-all duration-300">
+        
+        <button id="sendBtn" type="submit" 
+                class="bg-gradient-to-r from-emerald to-softsage text-cyberdark text-xs font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-xl hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center space-x-2">
+            <span>Analyze Activity</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+        </button>
+    </form>
+    
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatForm = document.getElementById('chatForm');
+        const chatViewport = document.getElementById('chatViewport');
+        const userInput = document.getElementById('userInput');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        // Dynamic local text formatter to map linebreaks and basic bold parameters safely
+        function formatMarkdownText(rawText) {
+            return rawText
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>')
+                .replace(/- (.*?)(<br>|$)/g, '<li class="ml-4 list-disc">$1</li>');
+        }
+
+        // Helper to append message bubbles to view pane
+        function appendMessageBubble(messageContent, senderType) {
+            const wrapperDiv = document.createElement('div');
+            wrapperDiv.className = `flex items-start ${senderType === 'user' ? 'justify-end' : 'justify-start'} space-x-3`;
+
+            // Setup avatar for assistant
+            let avatarHtml = '';
+            if (senderType === 'assistant') {
+                avatarHtml = `
+                    <div class="w-8 h-8 rounded-lg bg-emerald/10 border border-emerald/25 flex items-center justify-center text-emerald flex-shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                `;
+            }
+
+            const bubbleClass = senderType === 'user' 
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl rounded-tr-none shadow-md max-w-[80%] p-4' 
+                : 'bg-white/5 border border-white/10 text-gray-100 rounded-2xl rounded-tl-none shadow-md max-w-[80%] p-4';
+
+            const parsedText = formatMarkdownText(messageContent);
+            
+            wrapperDiv.innerHTML = `
+                ${avatarHtml}
+                <div class="${bubbleClass}">
+                    <p class="text-sm leading-relaxed">${parsedText}</p>
+                </div>
+            `;
+
+            chatViewport.appendChild(wrapperDiv);
+            chatViewport.scrollTop = chatViewport.scrollHeight;
+        }
+
+        // Form submit binding
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Immediately display user message in viewport
+            appendMessageBubble(message, 'user');
+            userInput.value = '';
+
+            // Render spinner active state
+            loadingSpinner.classList.remove('hidden');
+            chatViewport.scrollTop = chatViewport.scrollHeight;
+
+            try {
+                // Post activity context to API
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                loadingSpinner.classList.add('hidden');
+
+                if (response.ok) {
+                    // Extract advice tips and status metrics alerts
+                    const tipsList = data.recommendations.tips_list || [];
+                    const statusText = data.recommendations.status_alert || "";
+                    const breakdown = data.emissions_breakdown || {};
+                    
+                    let reply = `**AI Interpretation Analysis:**\n`;
+                    reply += `- Transit Distance: **${data.parsed_metrics.transport_km} km** (${data.parsed_metrics.transport_type})\n`;
+                    reply += `- Active Appliances: **${data.parsed_metrics.appliance_hours} hours**\n`;
+                    reply += `- Daily Diet: **${data.parsed_metrics.diet_type}**\n\n`;
+                    
+                    reply += `**Emissions Breakdown:**\n`;
+                    reply += `- Transport: **${breakdown.transport_emissions} kg CO₂**\n`;
+                    reply += `- Energy Utilities: **${breakdown.energy_emissions} kg CO₂**\n`;
+                    reply += `- Diet Habits: **${breakdown.diet_emissions} kg CO₂**\n`;
+                    reply += `- **Total Calculated Daily Footprint: ${breakdown.total_emissions} kg CO₂**\n\n`;
+
+                    reply += `**Status Alert:**\n${statusText}\n\n`;
+                    
+                    if (tipsList.length > 0) {
+                        reply += `**Actionable Insights Recommendations:**\n`;
+                        tipsList.forEach(tip => {
+                            reply += `- ${tip}\n`;
+                        });
+                    }
+
+                    appendMessageBubble(reply, 'assistant');
+                } else {
+                    const errorMsg = data.message || "Unable to retrieve metrics calculations.";
+                    appendMessageBubble(`**System Alert Error:** ${errorMsg}`, 'assistant');
+                }
+            } catch (err) {
+                loadingSpinner.classList.add('hidden');
+                appendMessageBubble(`**System Connection Error:** Failed to communicate with the application backend. Please check system configurations.`, 'assistant');
+            }
+        });
+    });
+</script>
+{% endblock %}
